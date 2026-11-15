@@ -1,0 +1,49 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Mascot from "../components/Mascot.astro";
+import { STORE } from "../data/config";
+---
+<Layout title={`Página no encontrada · ${STORE.name}`}>
+  <main class="lost container">
+    <Mascot mood="sad" class="lost__mascot" />
+    <p class="kicker"><span lang="ja">あれ？</span> · error 404</p>
+    <h1 class="marks">¡Ups! Esta página se perdió</h1>
+    <p class="lost__text">
+      Capaz alguien se la comió junto con el último roll <span class="kao">(｡•́︿•̀｡)</span>
+    </p>
+    <a class="btn btn--primary" href="/#menu">Volver al menú</a>
+    <p class="lost__credit">
+      Hecho con ♡ por <a href={STORE.credit.url} target="_blank" rel="noopener">{STORE.credit.label}</a>
+    </p>
+  </main>
+</Layout>
+
+<style>
+  .lost {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding-block: 3rem;
+    text-align: center;
+  }
+  .lost :global(.lost__mascot) {
+    width: 150px;
+    animation: float 4s ease-in-out infinite;
+  }
+  .lost .marks { font-size: clamp(1.5rem, 6vw, 2.2rem); }
+  .lost__text {
+    max-width: 36ch;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+  }
+  .lost__credit {
+    margin-top: 1.5rem;
+    color: var(--ink-soft);
+    font-size: .9rem;
+  }
+  .lost__credit a { color: var(--orange-ink); font-weight: 900; }
+</style>

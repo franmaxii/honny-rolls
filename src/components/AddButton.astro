@@ -1,0 +1,12 @@
+---
+// Botón "Agregar" que se ve antes de que cargue el JS.
+// Mantener igual al que arma src/scripts/cart.ts (función qtyControl).
+interface Props {
+  id: string;
+  name: string;
+}
+const { id, name } = Astro.props;
+---
+<button class="add-btn" type="button" data-action="add" data-id={id} aria-label={`Agregar ${name} al carrito`}>
+  <svg aria-hidden="true"><use href="#i-plus" /></svg><span>Agregar</span>
+</button>

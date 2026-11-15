@@ -1,0 +1,83 @@
+---
+const steps = [
+  { title: "Elegí tus rolls", text: "Sumá al carrito los sabores que más te tienten." },
+  { title: "Completá tus datos", text: "Contanos si retirás o te lo enviamos, y cómo pagás." },
+  { title: "Envialo por WhatsApp", text: "Te llega el pedido armadito y te confirmamos al toque." },
+];
+---
+<section class="howto container" id="como-pedir" aria-labelledby="howtoTitle">
+  <header class="section-head">
+    <p class="kicker"><span lang="ja">かんたん</span> · facilito</p>
+    <h2 class="marks" id="howtoTitle">¿Cómo pido?</h2>
+  </header>
+  <ol class="steps">
+    {steps.map((s, i) => (
+      <li class="step">
+        <span class="step__num">{i + 1}</span>
+        <h3>{s.title}</h3>
+        <p>{s.text}</p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .howto { padding-top: 4.5rem; padding-bottom: 4.5rem; }
+  .howto .section-head { margin-bottom: 3.25rem; }
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 3.25rem;
+  }
+  .step {
+    position: relative;
+    padding: 2.4rem 1.25rem 1.4rem;
+    background: var(--paper);
+    border: 3px solid var(--orange-line);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--pop);
+    text-align: center;
+  }
+  .step:nth-child(2) { transform: rotate(.8deg); }
+  .step:nth-child(3) { transform: rotate(-.8deg); }
+  /* orejitas detrás del número */
+  .step::before {
+    content: "";
+    position: absolute;
+    top: -44px;
+    left: 50%;
+    width: 46px;
+    height: 28px;
+    background: var(--bunny-ears) no-repeat center / contain;
+    transform: translateX(-50%);
+  }
+  .step__num {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--orange-line);
+    border-radius: 50%;
+    background: var(--orange);
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    color: var(--ink);
+    box-shadow: var(--pop-sm);
+  }
+  .step h3 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--orange-ink);
+  }
+  .step p { margin-top: .4rem; color: var(--ink-soft); }
+
+  @media (min-width: 640px) {
+    .steps { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  }
+</style>

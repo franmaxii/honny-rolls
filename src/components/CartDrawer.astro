@@ -1,0 +1,434 @@
+---
+import { getImage } from "astro:assets";
+import { PRODUCTS, type ClientProduct } from "../data/menu";
+import Mascot from "./Mascot.astro";
+
+// Miniaturas optimizadas para las líneas del carrito (se generan en el build)
+const clientProducts: ClientProduct[] = await Promise.all(
+  PRODUCTS.map(async (p) => ({
+    id: p.id,
+    name: p.name,
+    price: p.price,
+    thumb: p.img ? (await getImage({ src: p.img, width: 112, height: 112, fit: "cover" })).src : null,
+  }))
+);
+const productsJson = JSON.stringify(clientProducts).replace(/</g, "\\u003c");
+---
+<script type="application/json" id="cart-products" is:inline set:html={productsJson}></script>
+
+<!-- Botón flotante -->
+<button class="fab" id="fab" type="button" aria-controls="cart" tabindex="-1" aria-hidden="true">
+  <span class="fab__icon"><svg aria-hidden="true"><use href="#i-cart" /></svg></span>
+  <span class="fab__info">
+    <span id="fabCount">0 productos</span>
+    <strong id="fabTotal">$0</strong>
+  </span>
+  <span class="fab__go">Ver carrito</span>
+</button>
+
+<!-- Carrito -->
+<div class="drawer" id="cart" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-hidden="true">
+  <div class="drawer__backdrop" data-close></div>
+  <aside class="drawer__panel">
+    <header class="drawer__head">
+      <Mascot id="mascot" mood="sad" class="drawer__mascot" />
+      <div class="drawer__titles">
+        <h2 id="cartTitle">Tu carrito</h2>
+        <p id="cartSub">Está vacío… por ahora</p>
+      </div>
+      <button class="icon-btn drawer__close" type="button" data-close aria-label="Cerrar carrito">
+        <svg aria-hidden="true"><use href="#i-close" /></svg>
+      </button>
+    </header>
+
+    <div class="drawer__body">
+      <div class="cart-empty" id="cartEmpty">
+        <p class="cart-empty__kao">(｡•́︿•̀｡)</p>
+        <p>Todavía no agregaste nada.<br />¡Los rolls te están esperando!</p>
+        <button class="btn btn--ghost btn--sm" type="button" data-close data-goto="#menu">Ver el menú</button>
+      </div>
+
+      <ul class="cart-list" id="cartList" data-scope="cart" hidden></ul>
+
+      <form class="checkout" id="checkout" novalidate hidden>
+        <h3 class="checkout__title">Tus datos <svg aria-hidden="true"><use href="#i-sparkle" /></svg></h3>
+
+        <label class="field">
+          <span class="field__label">Nombre</span>
+          <input type="text" name="name" id="fName" autocomplete="name" placeholder="¿Cómo te llamás?" maxlength="60" required />
+          <span class="field__error" id="errName">Contanos tu nombre así sabemos de quién es el pedido.</span>
+        </label>
+
+        <fieldset class="seg">
+          <legend class="field__label">Entrega</legend>
+          <label><input type="radio" name="delivery" value="retiro" checked /><span>Retiro</span></label>
+          <label><input type="radio" name="delivery" value="envio" /><span>Envío</span></label>
+        </fieldset>
+
+        <label class="field" id="addressField" hidden>
+          <span class="field__label">Dirección</span>
+          <input type="text" name="address" id="fAddress" autocomplete="street-address" placeholder="Calle, número, barrio" maxlength="120" />
+          <span class="field__error" id="errAddress">Necesitamos la dirección para el envío.</span>
+        </label>
+
+        <fieldset class="seg">
+          <legend class="field__label">Pago</legend>
+          <label><input type="radio" name="pay" value="Efectivo" checked /><span>Efectivo</span></label>
+          <label><input type="radio" name="pay" value="Transferencia" /><span>Transferencia</span></label>
+          <label><input type="radio" name="pay" value="Mercado Pago" /><span>Mercado Pago</span></label>
+        </fieldset>
+
+        <label class="field">
+          <span class="field__label">Notas <small>(opcional)</small></span>
+          <textarea name="notes" rows="2" maxlength="300" placeholder="Sabores de la box, horario, dedicatoria…"></textarea>
+        </label>
+      </form>
+    </div>
+
+    <footer class="drawer__foot" id="cartFoot" hidden>
+      <div class="total">
+        <span>Total</span>
+        <strong id="cartTotal">$0</strong>
+      </div>
+      <p class="drawer__note" id="cartNote">Te pasamos la dirección de retiro por WhatsApp.</p>
+      <button class="btn btn--primary btn--block" type="submit" form="checkout" id="sendBtn">
+        <svg aria-hidden="true"><use href="#i-wa" /></svg>
+        Enviar pedido por WhatsApp
+      </button>
+      <button class="link-btn" type="button" id="clearBtn">Vaciar carrito</button>
+    </footer>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  import { initCart } from "../scripts/cart";
+  initCart();
+</script>
+
+<style is:global>
+  /* Global porque parte de este contenido lo arma el JS */
+
+  /* ---------- Botón flotante ---------- */
+  .fab {
+    position: fixed;
+    z-index: 35;
+    left: 50%;
+    bottom: calc(14px + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    width: min(440px, calc(100% - 2 * var(--gutter)));
+    padding: 8px 8px 8px 10px;
+    border: 3px solid var(--orange-line);
+    border-radius: 999px;
+    background: var(--paper);
+    box-shadow: 0 6px 0 var(--orange-line), 0 14px 30px rgba(90, 46, 20, .18);
+    text-align: left;
+    transform: translate(-50%, 150%);
+    visibility: hidden;
+    transition: transform .4s cubic-bezier(.3, 1.4, .5, 1), visibility 0s linear .4s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .fab.is-visible { transform: translate(-50%, 0); visibility: visible; transition-delay: 0s; }
+  .fab__icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--orange);
+    color: var(--ink);
+  }
+  .fab.bump .fab__icon { animation: bump .5s cubic-bezier(.3, 1.6, .5, 1); }
+  .fab__icon svg { width: 24px; height: 24px; }
+  .fab__info { flex: 1; display: flex; flex-direction: column; line-height: 1.2; font-size: .88rem; color: var(--ink-soft); }
+  .fab__info strong { font-family: var(--font-display); font-weight: 400; font-size: 1.1rem; color: var(--ink); }
+  .fab__go {
+    padding: .7rem 1.1rem;
+    border-radius: 999px;
+    background: var(--orange-cta);
+    color: #fff;
+    font-weight: 900;
+    font-size: 1.05rem;
+  }
+
+  /* ---------- Drawer ---------- */
+  .drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    visibility: hidden;
+    transition: visibility 0s linear .35s;
+  }
+  .drawer.is-open { visibility: visible; transition-delay: 0s; }
+  .drawer__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(90, 46, 20, .38);
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .drawer.is-open .drawer__backdrop { opacity: 1; }
+
+  .drawer__panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 92dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--cream);
+    background-image: radial-gradient(var(--cream-dot) 2px, transparent 2.6px);
+    background-size: 26px 26px;
+    border: 3px solid var(--orange-line);
+    border-bottom: 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    transform: translateY(105%);
+    transition: transform .38s cubic-bezier(.3, 1.15, .5, 1);
+  }
+  .drawer.is-open .drawer__panel { transform: none; }
+
+  .drawer__head {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: 1rem 1rem .8rem;
+    border-bottom: 3px dashed rgba(233, 115, 58, .45);
+  }
+  .drawer__mascot { width: 76px; flex: none; }
+  .drawer__titles { flex: 1; min-width: 0; }
+  .drawer__titles h2 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--orange-ink);
+  }
+  .drawer__titles p { color: var(--ink-soft); font-size: .92rem; }
+
+  .drawer__body {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 1rem;
+  }
+
+  .cart-empty {
+    text-align: center;
+    padding: 1.5rem 1rem 2rem;
+    color: var(--ink-soft);
+  }
+  .cart-empty[hidden] { display: none; }
+  .cart-empty__kao {
+    font-size: 2rem;
+    color: var(--orange-ink);
+    margin-bottom: .5rem;
+  }
+  .cart-empty .btn { margin-top: 1.1rem; }
+
+  .cart-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: .7rem;
+  }
+  .cart-list[hidden] { display: none; }
+  .line {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    grid-template-areas:
+      "img info info"
+      "img step sub";
+    align-items: center;
+    gap: .3rem .75rem;
+    padding: .6rem;
+    background: var(--paper);
+    border: 3px solid var(--orange-line);
+    border-radius: 20px;
+    animation: pop-in .3s ease;
+  }
+  .line__img {
+    grid-area: img;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    border: 2px solid var(--orange-line);
+    object-fit: cover;
+    background: var(--peach);
+  }
+  .line__img--swirl {
+    display: grid;
+    place-items: center;
+    color: var(--orange-line);
+  }
+  .line__img--swirl svg { width: 32px; height: 32px; }
+  .line__info { grid-area: info; min-width: 0; }
+  .line__name { font-weight: 900; line-height: 1.25; }
+  .line__unit { display: block; font-size: .82rem; color: var(--ink-soft); }
+  .line .stepper { grid-area: step; justify-self: start; box-shadow: none; border-width: 2px; }
+  .line .stepper button { width: 34px; height: 34px; }
+  .line .stepper button svg { width: 15px; height: 15px; }
+  .line__sub {
+    grid-area: sub;
+    font-family: var(--font-display);
+    color: var(--orange-ink);
+  }
+
+  /* ---------- Formulario ---------- */
+  .checkout {
+    margin-top: 1.4rem;
+    padding: 1.1rem;
+    background: var(--paper);
+    border: 3px solid var(--orange-line);
+    border-radius: var(--radius-lg);
+    display: grid;
+    gap: 1rem;
+  }
+  .checkout[hidden] { display: none; }
+  .checkout__title {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--ink);
+  }
+  .checkout__title svg { width: 18px; height: 18px; color: var(--orange); }
+
+  .field { display: grid; gap: .35rem; }
+  .field[hidden] { display: none; }
+  .field__label { font-weight: 900; font-size: .95rem; }
+  .field__label small { font-weight: 700; color: var(--ink-soft); }
+  .field input,
+  .field textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: .65rem .9rem;
+    border: 3px solid var(--orange-light);
+    border-radius: 16px;
+    background: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    resize: vertical;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field input::placeholder,
+  .field textarea::placeholder { color: #B98C6E; }
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--orange-cta);
+    box-shadow: 0 0 0 4px var(--peach);
+  }
+  .field__error {
+    display: none;
+    color: #B3261E;
+    font-size: .85rem;
+    font-weight: 800;
+  }
+  .field.has-error input { border-color: #D9483B; }
+  .field.has-error .field__error { display: block; }
+
+  .seg {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+  .seg legend { padding: 0; margin-bottom: .4rem; }
+  .seg label { position: relative; }
+  .seg input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .seg span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: .4rem 1rem;
+    border: 3px solid var(--orange-light);
+    border-radius: 999px;
+    background: #fff;
+    font-weight: 900;
+    transition: background-color .15s, border-color .15s;
+  }
+  .seg input:checked + span {
+    background: var(--orange);
+    border-color: var(--orange-line);
+  }
+  .seg input:checked + span::before {
+    content: "♡";
+    margin-right: .35rem;
+  }
+  .seg input:focus-visible + span {
+    outline: 3px dashed var(--orange-cta);
+    outline-offset: 3px;
+  }
+
+  .drawer__foot {
+    padding: .9rem 1rem calc(.9rem + env(safe-area-inset-bottom));
+    border-top: 3px dashed rgba(233, 115, 58, .45);
+    background: var(--cream-soft);
+  }
+  .drawer__foot[hidden] { display: none; }
+  .total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-weight: 900;
+    font-size: 1.1rem;
+  }
+  .total strong {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.6rem;
+    color: var(--orange-ink);
+  }
+  .drawer__note {
+    margin: .1rem 0 .8rem;
+    font-size: .85rem;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed;
+    z-index: 80;
+    left: 50%;
+    top: calc(var(--topbar-h) + 12px);
+    max-width: calc(100% - 2 * var(--gutter));
+    padding: .7rem 1.2rem;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 999px;
+    font-weight: 900;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(90, 46, 20, .25);
+    transform: translate(-50%, -20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .3s cubic-bezier(.3, 1.6, .5, 1), opacity .2s;
+  }
+  .toast.is-visible { transform: translate(-50%, 0); opacity: 1; }
+
+  @media (min-width: 640px) {
+    .drawer__panel {
+      left: auto;
+      top: 0;
+      width: 440px;
+      max-height: none;
+      border-bottom: 3px solid var(--orange-line);
+      border-right: 0;
+      border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+      transform: translateX(105%);
+    }
+  }
+</style>

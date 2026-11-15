@@ -1,0 +1,121 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/img/logo-chibi-rolls.webp";
+import { STORE } from "../data/config";
+---
+<header class="topbar" id="topbar">
+  <div class="topbar__inner container">
+    <a href="#inicio" class="topbar__brand" aria-label={`${STORE.name}, ir al inicio`}>
+      <Image src={logo} alt="" width={60} densities={[1, 2]} loading="eager" />
+    </a>
+    <nav class="topbar__nav" aria-label="Secciones">
+      <a href="#menu">Menú</a>
+      <a href="#como-pedir">Cómo pedir</a>
+    </nav>
+    <button class="cart-btn" id="cartBtn" type="button" aria-label="Abrir carrito" aria-controls="cart" aria-expanded="false">
+      <span class="cart-btn__ears" aria-hidden="true"></span>
+      <span class="cart-btn__face" aria-hidden="true"><svg class="cart-btn__icon"><use href="#i-cart" /></svg></span>
+      <span class="cart-btn__count" id="cartCount" aria-hidden="true">0</span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(254, 234, 184, .88);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 3px dashed rgba(233, 115, 58, .35);
+  }
+  .topbar__inner {
+    height: var(--topbar-h);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .topbar__brand img { width: 60px; transition: transform .3s; }
+  .topbar__brand:hover img { transform: rotate(-6deg) scale(1.05); }
+
+  .topbar__nav {
+    display: flex;
+    gap: .25rem;
+    margin-left: auto;
+  }
+  .topbar__nav a {
+    padding: .5rem .9rem;
+    border-radius: 999px;
+    font-weight: 900;
+    text-decoration: none;
+    transition: background-color .15s;
+  }
+  .topbar__nav a:hover { background: var(--cream-soft); }
+
+  /* Carrito con orejitas */
+  .cart-btn {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    flex: none;
+    margin-top: 16px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cart-btn__ears {
+    position: absolute;
+    left: 50%;
+    top: -19px;
+    width: 46px;
+    height: 28px;
+    background: var(--bunny-ears) no-repeat center / contain;
+    transform: translateX(-50%);
+    transform-origin: bottom center;
+  }
+  .cart-btn__face {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border: 3px solid var(--orange-line);
+    border-radius: 50%;
+    background: var(--paper);
+    color: var(--orange-line);
+    box-shadow: var(--pop-sm);
+  }
+  .cart-btn__icon { width: 26px; height: 26px; }
+  .cart-btn__count {
+    position: absolute;
+    right: -8px;
+    bottom: -6px;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 6px;
+    display: grid;
+    place-items: center;
+    border: 3px solid var(--paper);
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--cream);
+    font-size: .8rem;
+    font-weight: 900;
+    transform: scale(0);
+    transition: transform .25s cubic-bezier(.3, 1.6, .5, 1);
+  }
+  .cart-btn:global(.has-items) .cart-btn__count { transform: scale(1); }
+  .cart-btn:global(.bump) { animation: bump .5s cubic-bezier(.3, 1.6, .5, 1); }
+  .cart-btn:global(.bump) .cart-btn__ears { animation: ears-hop .5s ease; }
+
+  @keyframes ears-hop {
+    50% { transform: translateX(-50%) translateY(-5px) scaleX(1.15); }
+  }
+
+  @media (max-width: 479px) {
+    .topbar__nav { display: none; }
+    .cart-btn { margin-left: auto; }
+  }
+</style>

@@ -1,0 +1,78 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/img/logo-chibi-rolls.webp";
+import { STORE } from "../data/config";
+---
+<footer class="footer" id="footer">
+  <div class="footer__inner container">
+    <div class="footer__badge">
+      <Image src={logo} alt={STORE.name} width={122} densities={[1, 2]} />
+    </div>
+    <p class="footer__msg">Gracias por elegirnos <span class="kao">(◕ᴗ◕✿)</span></p>
+    <p class="footer__credit">
+      Hecho con <svg aria-hidden="true"><use href="#i-heart" /></svg> por
+      <a href={STORE.credit.url} target="_blank" rel="noopener">{STORE.credit.label}</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    margin-top: 2rem;
+    padding: 3.5rem 0 calc(2rem + env(safe-area-inset-bottom));
+    background: var(--orange);
+    text-align: center;
+  }
+  /* Deja lugar para el botón flotante del carrito */
+  :global(.has-fab) .footer { padding-bottom: calc(7rem + env(safe-area-inset-bottom)); }
+  /* borde ondulado */
+  .footer::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -22px;
+    height: 24px;
+    background: radial-gradient(circle at 18px 24px, var(--orange) 17px, transparent 18px) repeat-x;
+    background-size: 36px 24px;
+  }
+  .footer__inner { display: flex; flex-direction: column; align-items: center; gap: .9rem; }
+  .footer__badge {
+    position: relative;
+    z-index: 1;
+    width: 150px;
+    height: 150px;
+    display: grid;
+    place-items: center;
+    margin-top: -6rem;
+    border: 4px solid var(--orange-line);
+    border-radius: 50%;
+    background: var(--cream);
+    box-shadow: 0 6px 0 var(--orange-line);
+  }
+  .footer__badge img { width: 122px; }
+  .footer__msg {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--ink);
+  }
+  .footer__credit {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    background: var(--cream-soft);
+    border: 3px solid var(--orange-line);
+    font-weight: 800;
+  }
+  .footer__credit svg { width: 16px; height: 16px; color: var(--orange-cta); }
+  .footer__credit a {
+    font-weight: 900;
+    color: var(--orange-ink);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+  .footer__credit a:hover { color: var(--ink); }
+</style>

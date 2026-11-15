@@ -1,0 +1,9 @@
+// Cloudflare Pages: sitio 100% estático, se sube la carpeta dist/ (sin adapter).
+// Pages sirve dist/404.html para las rutas que no existen y aplica public/_headers.
+// Deploy: npm run deploy
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "chibi-rolls",
+  "compatibility_date": "2026-11-14",
+  "pages_build_output_dir": "./dist"
+}

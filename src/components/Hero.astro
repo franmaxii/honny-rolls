@@ -1,0 +1,234 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/img/logo-chibi-rolls.webp";
+import heroPhoto from "../assets/img/rolls-hero.webp";
+import { STORE } from "../data/config";
+---
+<section class="hero container" id="inicio">
+  <div class="hero__text">
+    <p class="kicker"><span lang="ja">シナモンロール</span> · rolls de canela</p>
+    <Image
+      class="hero__logo"
+      src={logo}
+      alt={STORE.name}
+      widths={[320, 640]}
+      sizes="(min-width: 900px) 300px, min(320px, 78vw)"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <h1 class="hero__title">Rolls de canela <span>esponjositos</span> y hechos con amor</h1>
+    <p class="hero__lead">
+      Masa brioche, mucha canela y glaseado cremoso. Armá tu pedido acá y nos llega directo por WhatsApp{" "}
+      <span class="kao">(｡•ᴗ•｡)♡</span>
+    </p>
+    <div class="hero__cta">
+      <a class="btn btn--primary" href="#menu">Ver el menú</a>
+      <a class="btn btn--ghost" href="#como-pedir">¿Cómo pido?</a>
+    </div>
+  </div>
+
+  <div class="hero__art" aria-hidden="true">
+    <div class="polaroid">
+      <Image src={heroPhoto} alt="" widths={[400, 800]} sizes="(min-width: 900px) 400px, 84vw" loading="eager" />
+      <span class="polaroid__caption">recién horneados ♡</span>
+    </div>
+    <span class="bubble">¡Calentitos!</span>
+    <svg class="spark spark--1"><use href="#i-sparkle" /></svg>
+    <svg class="spark spark--2"><use href="#i-sparkle" /></svg>
+    <svg class="spark spark--3"><use href="#i-sparkle" /></svg>
+    <svg class="swirl"><use href="#i-swirl" /></svg>
+  </div>
+</section>
+
+<ul class="perks container" aria-label="Lo que tenés que saber">
+  <li><svg aria-hidden="true"><use href="#i-sparkle" /></svg>Horneados en el día</li>
+  <li><svg aria-hidden="true"><use href="#i-heart" /></svg>Retiro o envío</li>
+  <li><svg aria-hidden="true"><use href="#i-wa" /></svg>Pedís por WhatsApp</li>
+</ul>
+
+<div class="ribbon-wrap" aria-hidden="true">
+  <div class="ribbon">
+    <div class="ribbon__track">
+      <span>シナモンロール ✧ rolls de canela ✧ recién horneados ✧ かわいい ✧ hechos con amor ✧ </span>
+      <span>シナモンロール ✧ rolls de canela ✧ recién horneados ✧ かわいい ✧ hechos con amor ✧ </span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .hero {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+  .hero__text { text-align: center; }
+  .hero__logo {
+    width: min(320px, 78vw);
+    margin: .75rem auto .5rem;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 6px 0 rgba(233, 115, 58, .18));
+  }
+  .hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 5.4vw, 2.6rem);
+    color: var(--ink);
+    max-width: 18ch;
+    margin-inline: auto;
+  }
+  .hero__title span {
+    color: var(--orange-ink);
+    background: linear-gradient(transparent 62%, var(--peach) 62%);
+    padding-inline: .1em;
+  }
+  .hero__lead {
+    max-width: 44ch;
+    margin: 1rem auto 0;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .9rem;
+    margin-top: 1.5rem;
+  }
+
+  .hero__art {
+    position: relative;
+    width: min(380px, 84vw);
+    margin-inline: auto;
+    padding: 1rem 0 1.5rem;
+  }
+  .polaroid {
+    position: relative;
+    padding: 12px 12px 52px;
+    background: var(--paper);
+    border: 3px solid var(--orange-line);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 0 var(--orange-line);
+    transform: rotate(3deg);
+  }
+  .polaroid img {
+    width: 100%;
+    aspect-ratio: 4 / 4.4;
+    object-fit: cover;
+    object-position: 50% 70%;
+    border-radius: var(--radius);
+    border: 3px solid var(--orange-line);
+  }
+  .polaroid__caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 12px;
+    text-align: center;
+    font-family: var(--font-display);
+    color: var(--orange-ink);
+    font-size: 1.05rem;
+  }
+  .bubble {
+    position: absolute;
+    top: 0;
+    left: -6px;
+    padding: .55rem 1rem;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-size: .95rem;
+    transform: rotate(-8deg);
+    animation: wiggle 3s ease-in-out infinite;
+  }
+  .bubble::after {
+    content: "";
+    position: absolute;
+    left: 30px;
+    bottom: -9px;
+    border: 7px solid transparent;
+    border-top-color: var(--ink);
+    border-bottom: 0;
+  }
+  .spark,
+  .swirl { position: absolute; color: var(--orange); }
+  .spark { animation: twinkle 2.4s ease-in-out infinite; }
+  .spark--1 { width: 34px; height: 34px; top: 8%; right: -10px; }
+  .spark--2 { width: 20px; height: 20px; top: 40%; left: -22px; animation-delay: .8s; }
+  .spark--3 { width: 26px; height: 26px; bottom: 8%; right: -18px; animation-delay: 1.4s; color: var(--orange-line); }
+  .swirl { width: 46px; height: 46px; bottom: -4px; left: -10px; color: var(--orange-line); animation: spin 9s linear infinite; }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-8deg); }
+    50% { transform: rotate(-3deg) translateY(-3px); }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Chips */
+  .perks {
+    list-style: none;
+    margin: .5rem auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .6rem;
+  }
+  .perks li {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .45rem .95rem;
+    border: 2px solid var(--orange-line);
+    border-radius: 999px;
+    background: var(--cream-soft);
+    font-weight: 800;
+    font-size: .92rem;
+  }
+  .perks svg { width: 18px; height: 18px; color: var(--orange-line); }
+
+  /* Cinta animada */
+  .ribbon-wrap {
+    overflow: hidden;
+    padding-block: 1.25rem;
+    margin-top: 1.25rem;
+  }
+  .ribbon {
+    overflow: hidden;
+    background: var(--orange);
+    border-block: 3px solid var(--orange-line);
+    transform: rotate(-1.5deg);
+    width: 104%;
+    margin-left: -2%;
+  }
+  .ribbon__track {
+    display: flex;
+    width: max-content;
+    animation: marquee 26s linear infinite;
+  }
+  .ribbon__track span {
+    padding: .6rem 0;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--ink);
+    white-space: pre;
+  }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  @media (max-width: 479px) {
+    .hero__cta .btn { flex: 1 1 100%; }
+  }
+
+  @media (min-width: 900px) {
+    .hero {
+      grid-template-columns: 1.1fr 1fr;
+      gap: 3rem;
+      padding-top: 3rem;
+    }
+    .hero__text { text-align: left; }
+    .hero__logo { margin-left: 0; width: 300px; }
+    .hero__title, .hero__lead { margin-left: 0; }
+    .hero__cta { justify-content: flex-start; }
+    .hero__art { width: 400px; }
+  }
+</style>

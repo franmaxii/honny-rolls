@@ -1,0 +1,127 @@
+---
+import { CATEGORIES, PRODUCTS } from "../data/menu";
+import ProductCard from "./ProductCard.astro";
+import ExtraItem from "./ExtraItem.astro";
+
+const sections = CATEGORIES.map((c) => ({
+  ...c,
+  items: PRODUCTS.filter((p) => p.cat === c.id),
+})).filter((c) => c.items.length > 0);
+---
+<section class="menu" id="menu" aria-labelledby="menuTitle">
+  <div class="container">
+    <header class="section-head">
+      <p class="kicker"><span lang="ja">メニュー</span> · menú</p>
+      <h2 class="marks" id="menuTitle">Elegí tus rolls</h2>
+    </header>
+  </div>
+
+  <nav class="cat-nav" aria-label="Categorías del menú">
+    <div class="cat-nav__inner container">
+      {sections.map((c) => (
+        <a class="pill" href={`#cat-${c.id}`} data-cat={c.id}>
+          {c.name} <small lang="ja">{c.jp}</small>
+        </a>
+      ))}
+    </div>
+  </nav>
+
+  <div class="container" id="menuSections">
+    {sections.map((c) => (
+      <section class="cat" id={`cat-${c.id}`} aria-labelledby={`h-${c.id}`} data-scope="menu">
+        <header class="cat__head">
+          <h3 class="cat__title" id={`h-${c.id}`}>{c.name}</h3>
+          <span class="cat__jp" lang="ja">{c.jp}</span>
+          <p class="cat__blurb">{c.blurb}</p>
+        </header>
+        {c.compact ? (
+          <div class="extras">
+            {c.items.map((p) => <ExtraItem product={p} />)}
+          </div>
+        ) : (
+          <div class="grid">
+            {c.items.map((p) => <ProductCard product={p} />)}
+          </div>
+        )}
+      </section>
+    ))}
+  </div>
+</section>
+
+<style>
+  .menu { padding-top: 3.5rem; }
+
+  .cat-nav {
+    position: sticky;
+    top: calc(var(--topbar-h) + 3px);
+    z-index: 30;
+    padding: .6rem 0;
+    background: rgba(254, 234, 184, .9);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .cat-nav__inner {
+    display: flex;
+    gap: .55rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-block: 4px 8px;
+  }
+  .cat-nav__inner::-webkit-scrollbar { display: none; }
+  .pill {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    min-height: 44px;
+    padding: .45rem 1.1rem;
+    border: 3px solid var(--orange-line);
+    border-radius: 999px;
+    background: var(--paper);
+    font-weight: 900;
+    text-decoration: none;
+    box-shadow: var(--pop-sm);
+    transition: background-color .2s, transform .15s;
+  }
+  .pill small { font-weight: 800; color: var(--ink-soft); }
+  .pill:hover { transform: translateY(-2px); }
+  .pill:global(.is-active) { background: var(--orange); }
+  .pill:global(.is-active) small { color: var(--ink); }
+
+  .cat { padding-top: 2.25rem; }
+  .cat__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .25rem .75rem;
+    margin-bottom: 1.1rem;
+    padding-bottom: .75rem;
+    border-bottom: 3px dotted var(--orange-light);
+  }
+  .cat__title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--ink);
+  }
+  .cat__jp {
+    order: -1;
+    width: 100%;
+    font-size: .85rem;
+    font-weight: 900;
+    color: var(--orange-ink);
+    letter-spacing: .12em;
+  }
+  .cat__blurb { color: var(--ink-soft); }
+
+  .grid { display: grid; gap: 1.1rem; }
+  .extras { display: grid; gap: .75rem; }
+
+  @media (min-width: 640px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .extras { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 900px) {
+    .grid { grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+    .extras { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>

@@ -1,0 +1,294 @@
+/* ==========================================================
+   Chibi Rolls · estilos globales
+   Colores tomados del logo: crema #FEEAB8, naranja #F5894E,
+   contorno #E9733A
+   ========================================================== */
+
+:root {
+  --cream: #FEEAB8;
+  --cream-dot: #F9DB9E;
+  --cream-soft: #FFF3D6;
+  --paper: #FFFAEE;
+  --peach: #FFDDBF;
+
+  --orange: #F5894E;
+  --orange-light: #F89A5E;
+  --orange-line: #E9733A;
+  --orange-cta: #DD6229;
+  --orange-cta-edge: #B94E1C;
+  --orange-ink: #C2551E;
+
+  --ink: #5A2E14;
+  --ink-soft: #85502F;
+
+  --radius-xl: 32px;
+  --radius-lg: 26px;
+  --radius: 18px;
+  --pop: 0 5px 0 var(--orange-line);
+  --pop-sm: 0 3px 0 var(--orange-line);
+
+  /* Las variables --font-mochiy y --font-nunito las genera la API de fuentes de Astro */
+  --font-display: var(--font-mochiy), "Nunito", system-ui, sans-serif;
+  --font-body: var(--font-nunito), system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --topbar-h: 72px;
+  --gutter: 16px;
+
+  /* orejitas de conejo (mismo estilo que el logo) */
+  --bunny-ears: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 30'%3E%3Cg stroke='%23E9733A' stroke-width='3' fill='%23F89A5E'%3E%3Cellipse cx='15' cy='16' rx='7' ry='13' transform='rotate(-14 15 16)'/%3E%3Cellipse cx='35' cy='16' rx='7' ry='13' transform='rotate(14 35 16)'/%3E%3C/g%3E%3Cg fill='%23FFF3D6'%3E%3Cellipse cx='15' cy='18' rx='2.8' ry='7' transform='rotate(-14 15 18)'/%3E%3Cellipse cx='35' cy='18' rx='2.8' ry='7' transform='rotate(14 35 18)'/%3E%3C/g%3E%3C/svg%3E");
+
+  color-scheme: light;
+}
+
+@media (min-width: 640px) {
+  :root { --gutter: 24px; }
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--topbar-h) + 64px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background-color: var(--cream);
+  background-image: radial-gradient(var(--cream-dot) 2.2px, transparent 2.8px);
+  background-size: 30px 30px;
+  overflow-x: hidden;
+}
+
+body.no-scroll { overflow: hidden; }
+
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+h1, h2, h3, h4 { margin: 0; font-weight: 400; line-height: 1.15; }
+p { margin: 0; }
+
+:focus-visible {
+  outline: 3px dashed var(--orange-cta);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.kao { white-space: nowrap; font-family: var(--font-body); }
+
+/* ---------- Botones ---------- */
+.btn {
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --edge: var(--orange-line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  min-height: 52px;
+  padding: .7rem 1.5rem;
+  border: 3px solid var(--edge);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--fg);
+  font-weight: 900;
+  font-size: 1.1875rem;
+  text-decoration: none;
+  box-shadow: 0 5px 0 var(--edge);
+  transition: transform .15s ease, box-shadow .15s ease, background-color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 7px 0 var(--edge); }
+.btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--edge); }
+.btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: 0 5px 0 var(--edge); }
+.btn svg { width: 24px; height: 24px; flex: none; }
+
+.btn--primary { --bg: var(--orange-cta); --fg: #fff; --edge: var(--orange-cta-edge); }
+.btn--ghost { --bg: var(--paper); }
+.btn--sm { min-height: 44px; font-size: 1rem; padding: .5rem 1.1rem; }
+.btn--block { width: 100%; padding-inline: .9rem; }
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 3px solid var(--orange-line);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--orange-line);
+  box-shadow: var(--pop-sm);
+  transition: transform .15s;
+}
+.icon-btn svg { width: 18px; height: 18px; }
+.icon-btn:hover { transform: rotate(90deg); }
+
+.link-btn {
+  display: block;
+  margin: .65rem auto 0;
+  padding: .35rem .6rem;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  font-weight: 800;
+  font-size: .9rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Encabezados de sección ---------- */
+.section-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.kicker {
+  display: inline-block;
+  padding: .3rem .9rem;
+  border: 2px solid var(--orange-line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--orange-ink);
+  font-weight: 900;
+  font-size: .85rem;
+  letter-spacing: .04em;
+}
+.marks {
+  position: relative;
+  display: inline-block;
+  margin-top: .75rem;
+  padding-inline: 46px;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 5vw, 2.4rem);
+  color: var(--orange-ink);
+}
+/* Las rayitas de emoción del logo */
+.marks::before,
+.marks::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  margin-top: -20px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Cg stroke='%23F07838' stroke-width='5.5' stroke-linecap='round'%3E%3Cpath d='M13 5l5 9'/%3E%3Cpath d='M4 21l11 3'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / contain;
+}
+.marks::before { left: 0; }
+.marks::after { right: 0; transform: scaleX(-1); }
+
+/* ---------- Agregar + stepper (los arma también el JS) ---------- */
+.add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  min-height: 44px;
+  padding: .35rem 1rem .35rem .6rem;
+  border: 3px solid var(--orange-cta-edge);
+  border-radius: 999px;
+  background: var(--orange-cta);
+  color: #fff;
+  font-weight: 900;
+  font-size: 1rem;
+  box-shadow: 0 3px 0 var(--orange-cta-edge);
+  transition: transform .12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.add-btn svg { width: 20px; height: 20px; }
+.add-btn:hover { transform: translateY(-2px); }
+.add-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--orange-cta-edge); }
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 3px solid var(--orange-line);
+  border-radius: 999px;
+  background: var(--cream-soft);
+  box-shadow: var(--pop-sm);
+  animation: pop-in .3s cubic-bezier(.3, 1.6, .5, 1);
+}
+.stepper button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--orange-line);
+  -webkit-tap-highlight-color: transparent;
+}
+.stepper button svg { width: 18px; height: 18px; }
+.stepper button:hover { background: var(--peach); }
+.stepper button:active { transform: scale(.88); }
+.stepper output {
+  min-width: 1.6em;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+
+/* "+1" que sale volando */
+.plus-one {
+  position: fixed;
+  z-index: 90;
+  pointer-events: none;
+  font-family: var(--font-display);
+  color: var(--orange-cta);
+  font-size: 1.15rem;
+  text-shadow: 0 2px 0 var(--paper), 0 -2px 0 var(--paper), 2px 0 0 var(--paper), -2px 0 0 var(--paper);
+  animation: fly-up .8s ease-out forwards;
+}
+
+/* ---------- Animaciones compartidas ---------- */
+@keyframes pop-in {
+  0% { transform: scale(.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes fly-up {
+  0% { transform: translate(-50%, 0) scale(.6); opacity: 0; }
+  20% { opacity: 1; transform: translate(-50%, -12px) scale(1.15); }
+  100% { transform: translate(-50%, -60px) scale(1); opacity: 0; }
+}
+@keyframes bump {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.18) rotate(-6deg); }
+  70% { transform: scale(.95) rotate(3deg); }
+  100% { transform: scale(1); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+@keyframes twinkle {
+  0%, 100% { transform: scale(1) rotate(0); opacity: 1; }
+  50% { transform: scale(.55) rotate(45deg); opacity: .6; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
