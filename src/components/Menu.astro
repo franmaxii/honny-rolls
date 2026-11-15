@@ -1,7 +1,6 @@
 ---
 import { CATEGORIES, PRODUCTS } from "../data/menu";
 import ProductCard from "./ProductCard.astro";
-import ExtraItem from "./ExtraItem.astro";
 
 const sections = CATEGORIES.map((c) => ({
   ...c,
@@ -34,15 +33,9 @@ const sections = CATEGORIES.map((c) => ({
           <span class="cat__jp" lang="ja">{c.jp}</span>
           <p class="cat__blurb">{c.blurb}</p>
         </header>
-        {c.compact ? (
-          <div class="extras">
-            {c.items.map((p) => <ExtraItem product={p} />)}
-          </div>
-        ) : (
-          <div class="grid">
-            {c.items.map((p) => <ProductCard product={p} />)}
-          </div>
-        )}
+        <div class:list={["grid", { "grid--4": c.items.length === 4, "grid--pairs": c.pairs }]}>
+          {c.items.map((p) => <ProductCard product={p} />)}
+        </div>
       </section>
     ))}
   </div>
@@ -114,14 +107,13 @@ const sections = CATEGORIES.map((c) => ({
   .cat__blurb { color: var(--ink-soft); }
 
   .grid { display: grid; gap: 1.1rem; }
-  .extras { display: grid; gap: .75rem; }
 
   @media (min-width: 640px) {
     .grid { grid-template-columns: repeat(2, 1fr); }
-    .extras { grid-template-columns: repeat(2, 1fr); }
   }
   @media (min-width: 900px) {
     .grid { grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
-    .extras { grid-template-columns: repeat(4, 1fr); }
+    .grid--4 { grid-template-columns: repeat(4, 1fr); }
+    .grid--pairs { grid-auto-flow: column; grid-template-rows: repeat(2, auto); }
   }
 </style>

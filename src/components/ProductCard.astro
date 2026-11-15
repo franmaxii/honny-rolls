@@ -12,13 +12,18 @@ const { product: p } = Astro.props;
 ---
 <article class="card" data-card={p.id}>
   <div class="card__media">
-    {p.img && (
+    {p.img ? (
       <Image
         src={p.img}
         alt={p.name}
         widths={[240, 480]}
         sizes="(min-width: 900px) 330px, (min-width: 640px) 45vw, 112px"
       />
+    ) : (
+      <div class="card__ph" aria-hidden="true">
+        <svg class="card__ph-swirl"><use href="#i-swirl" /></svg>
+        <svg class="card__ph-spark"><use href="#i-sparkle" /></svg>
+      </div>
     )}
     {p.tag && <span class="card__tag">{p.tag}</span>}
   </div>
@@ -61,13 +66,36 @@ const { product: p } = Astro.props;
     position: relative;
     align-self: start;
   }
-  .card__media img {
+  .card__media img,
+  .card__ph {
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
     border-radius: 18px;
     border: 3px solid var(--orange-line);
     background: var(--peach);
+  }
+  /* Producto sin foto: rollito ilustrado */
+  .card__ph {
+    position: relative;
+    display: grid;
+    place-items: center;
+    background-color: var(--cream-soft);
+    background-image: radial-gradient(var(--peach) 2.2px, transparent 2.8px);
+    background-size: 16px 16px;
+  }
+  .card__ph-swirl {
+    width: 58%;
+    height: 58%;
+    color: var(--orange-line);
+  }
+  .card__ph-spark {
+    position: absolute;
+    top: 12%;
+    right: 12%;
+    width: 18%;
+    height: 18%;
+    color: var(--orange);
   }
   .card__tag {
     position: absolute;
@@ -121,7 +149,8 @@ const { product: p } = Astro.props;
     }
     .card:hover { transform: translateY(-4px) rotate(-.6deg); }
     .card:nth-child(even):hover { transform: translateY(-4px) rotate(.6deg); }
-    .card__media img { border-radius: 20px; }
+    .card__media img,
+    .card__ph { border-radius: 20px; }
     .card__tag { left: auto; right: 10px; bottom: auto; top: 10px; font-size: .8rem; padding: .25rem .7rem; transform: rotate(6deg); }
     .card__body { padding: .2rem .35rem .3rem; }
     .card__name { font-size: 1.2rem; }

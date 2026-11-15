@@ -4,6 +4,7 @@ import { defineConfig, fontProviders } from "astro/config";
 // Mochiy Pop One es una fuente japonesa enorme: le pedimos a Google solo los caracteres
 // que usamos (latín con acentos + el japonés de la cinta). Si agregás texto en japonés
 // con esta fuente, sumá esos caracteres acá.
+/** @param {number} from @param {number} to */
 const range = (from, to) =>
   Array.from({ length: to - from + 1 }, (_, i) => String.fromCodePoint(from + i));
 const MOCHIY_GLYPHS = [

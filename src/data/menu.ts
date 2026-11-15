@@ -1,12 +1,15 @@
 import type { ImageMetadata } from "astro";
 
-import roll1 from "../assets/img/roll-1.webp";
-import roll2 from "../assets/img/roll-2.webp";
-import roll3 from "../assets/img/roll-3.webp";
-import roll4 from "../assets/img/roll-4.webp";
-import roll5 from "../assets/img/roll-5.webp";
-import roll6 from "../assets/img/roll-6.webp";
-import roll7 from "../assets/img/roll-7.webp";
+import clasico from "../assets/img/clasico.webp";
+import nutella from "../assets/img/nutella.webp";
+import berry from "../assets/img/berry.webp";
+import pistacho from "../assets/img/pistacho.webp";
+import noir from "../assets/img/noir.webp";
+import pinky from "../assets/img/pinky.webp";
+import chimi from "../assets/img/chimi.webp";
+import boxClasicos from "../assets/img/box-clasicos.webp";
+import boxMix from "../assets/img/box-mix.webp";
+import boxEspeciales from "../assets/img/box-especiales.webp";
 
 export interface Category {
   id: string;
@@ -14,8 +17,8 @@ export interface Category {
   /** Texto decorativo en japonés */
   jp: string;
   blurb: string;
-  /** Se muestra como lista compacta (sin foto) */
-  compact?: boolean;
+  /** Los productos vienen de a pares (×4 / ×6): en escritorio cada par va en una columna */
+  pairs?: boolean;
 }
 
 export interface Product {
@@ -24,45 +27,53 @@ export interface Product {
   name: string;
   price: number;
   desc?: string;
+  /** Sin foto se muestra una ilustración de rollito */
   img?: ImageMetadata;
   tag?: string;
 }
 
 export const CATEGORIES: Category[] = [
-  { id: "clasicos",   name: "Clásicos",   jp: "クラシック", blurb: "Los de siempre: esponjosos y con mucha canela." },
-  { id: "especiales", name: "Especiales", jp: "スペシャル", blurb: "Rellenos y toppings para darse un gustito." },
-  { id: "boxes",      name: "Boxes",      jp: "ボックス",   blurb: "Para compartir (o no, no juzgamos)." },
-  { id: "extras",     name: "Extras",     jp: "おまけ",     blurb: "Sumale un toque más a tu pedido.", compact: true },
+  { id: "clasicos",   name: "Clásicos",   jp: "クラシック", blurb: "Los de siempre, con mucha canela." },
+  { id: "especiales", name: "Especiales", jp: "スペシャル", blurb: "Para darse un gustito." },
+  { id: "salados",    name: "Salados",    jp: "セイボリー", blurb: "Para los que prefieren algo saladito." },
+  { id: "boxes",      name: "Boxes",      jp: "ボックス",   blurb: "Elegí los sabores y contanos cuáles en las notas del pedido.", pairs: true },
 ];
 
-// Productos de muestra: cambiá nombres, precios e imágenes cuando tengas los reales.
-// Para usar otra foto: guardala en src/assets/img/, importala arriba y ponela en `img`.
+// Para cambiar una foto: guardala en src/assets/img/, importala arriba y ponela en `img`.
 export const PRODUCTS: Product[] = [
-  { id: "clasico",   cat: "clasicos",   name: "Roll Clásico",           price: 3200, img: roll1, tag: "favorito ♡",
-    desc: "Masa brioche, canela, azúcar mascabo y glaseado de queso crema." },
-  { id: "ddl",       cat: "clasicos",   name: "Roll de Dulce de Leche", price: 3600, img: roll2,
-    desc: "Relleno de canela con un baño generoso de dulce de leche." },
-  { id: "naked",     cat: "clasicos",   name: "Roll Naked",             price: 2900, img: roll3,
-    desc: "Sin glaseado, para quienes aman la canela bien pura." },
+  { id: "clasico",   cat: "clasicos",   name: "Roll Clásico",          price: 4500, img: clasico,
+    desc: "Canela y glaseado cremoso. El de siempre." },
+  { id: "ddl",       cat: "clasicos",   name: "Roll Dulce de Leche",   price: 4500,
+    desc: "Con un baño de dulce de leche." },
+  { id: "naked",     cat: "clasicos",   name: "Roll Naked",            price: 3800,
+    desc: "Sin glaseado, pura canela." },
 
-  { id: "choco",     cat: "especiales", name: "Roll Choco Avellanas",   price: 3900, img: roll4, tag: "nuevo ✧",
-    desc: "Relleno de crema de avellanas y chocolate, con avellanas tostadas." },
-  { id: "redvelvet", cat: "especiales", name: "Roll Red Velvet",        price: 3900, img: roll5,
-    desc: "Masa red velvet con frosting de queso crema bien cremoso." },
-  { id: "pistacho",  cat: "especiales", name: "Roll Pistacho",          price: 4500, img: roll6, tag: "edición limitada",
-    desc: "Crema de pistacho casera y pistachos picados por arriba." },
+  { id: "nuty-love",   cat: "especiales", name: "Nuty Love",   price: 5000, img: nutella,
+    desc: "Roll de Nutella con hilos de chocolate." },
+  { id: "berry-dream", cat: "especiales", name: "Berry Dream", price: 5000, img: berry,
+    desc: "Frutos rojos y crema por arriba." },
+  { id: "green-crush", cat: "especiales", name: "Green Crush", price: 5000, img: pistacho,
+    desc: "Crema de pistacho y chocolate blanco." },
+  { id: "the-noir",    cat: "especiales", name: "The Noir",    price: 5000, img: noir,
+    desc: "Crema, Oreo triturada y una galletita arriba." },
+  { id: "pinky-roll",  cat: "especiales", name: "Pinky Roll",  price: 5000, img: pinky,
+    desc: "Glaseado rosa con hilos de crema." },
 
-  { id: "box4",      cat: "boxes",      name: "Box Mini ×4",            price: 11500, img: roll7, tag: "ideal regalo",
-    desc: "4 rolls clásicos en cajita kawaii con moñito." },
-  { id: "box6",      cat: "boxes",      name: "Box Party ×6",           price: 18900, img: roll6, tag: "para compartir",
-    desc: "6 rolls, elegí hasta 3 sabores (contanos en las notas)." },
-  { id: "box12",     cat: "boxes",      name: "Box Chibi ×12",          price: 35000, img: roll1,
-    desc: "12 rolls surtidos para cumples, juntadas y maratones de anime." },
+  { id: "chimi-roll",  cat: "salados",    name: "Chimi Roll",  price: 5000, img: chimi,
+    desc: "Relleno de jamón y queso." },
 
-  { id: "x-glaseado", cat: "extras", name: "Glaseado extra",            price: 600 },
-  { id: "x-ddl",      cat: "extras", name: "Pote de dulce de leche",    price: 900 },
-  { id: "x-nueces",   cat: "extras", name: "Nueces caramelizadas",      price: 800 },
-  { id: "x-tarjeta",  cat: "extras", name: "Tarjetita con dedicatoria", price: 500 },
+  { id: "box-clasicos-4",   cat: "boxes", name: "Box Clásicos ×4",   price: 16500, img: boxClasicos,
+    desc: "4 rolls clásicos a elección." },
+  { id: "box-clasicos-6",   cat: "boxes", name: "Box Clásicos ×6",   price: 25500, img: boxClasicos,
+    desc: "6 rolls clásicos a elección." },
+  { id: "box-mix-4",        cat: "boxes", name: "Box Mix ×4",        price: 17500, img: boxMix, tag: "2 + 2",
+    desc: "2 especiales y 2 clásicos." },
+  { id: "box-mix-6",        cat: "boxes", name: "Box Mix ×6",        price: 27500, img: boxMix, tag: "3 + 3",
+    desc: "3 especiales y 3 clásicos." },
+  { id: "box-especiales-4", cat: "boxes", name: "Box Especiales ×4", price: 18500, img: boxEspeciales,
+    desc: "4 rolls especiales a elección." },
+  { id: "box-especiales-6", cat: "boxes", name: "Box Especiales ×6", price: 28500, img: boxEspeciales,
+    desc: "6 rolls especiales a elección." },
 ];
 
 /** Datos mínimos que necesita el carrito en el navegador */
