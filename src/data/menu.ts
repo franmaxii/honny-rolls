@@ -1,6 +1,8 @@
 import type { ImageMetadata } from "astro";
 
 import clasico from "../assets/img/clasico.webp";
+import ddl from "../assets/img/ddl.webp";
+import naked from "../assets/img/naked.webp";
 import nutella from "../assets/img/nutella.webp";
 import berry from "../assets/img/berry.webp";
 import pistacho from "../assets/img/pistacho.webp";
@@ -43,9 +45,9 @@ export const CATEGORIES: Category[] = [
 export const PRODUCTS: Product[] = [
   { id: "clasico",   cat: "clasicos",   name: "Roll Clásico",          price: 4500, img: clasico,
     desc: "Canela y glaseado cremoso. El de siempre." },
-  { id: "ddl",       cat: "clasicos",   name: "Roll Dulce de Leche",   price: 4500,
+  { id: "ddl",       cat: "clasicos",   name: "Roll Dulce de Leche",   price: 4500, img: ddl,
     desc: "Con un baño de dulce de leche." },
-  { id: "naked",     cat: "clasicos",   name: "Roll Naked",            price: 3800,
+  { id: "naked",     cat: "clasicos",   name: "Roll Naked",            price: 3800, img: naked,
     desc: "Sin glaseado, pura canela." },
 
   { id: "nuty-love",   cat: "especiales", name: "Nuty Love",   price: 5000, img: nutella,
@@ -57,7 +59,7 @@ export const PRODUCTS: Product[] = [
   { id: "the-noir",    cat: "especiales", name: "The Noir",    price: 5000, img: noir,
     desc: "Crema, Oreo triturada y una galletita arriba." },
   { id: "pinky-roll",  cat: "especiales", name: "Pinky Roll",  price: 5000, img: pinky,
-    desc: "Glaseado rosa con hilos de crema." },
+    desc: "Bañado en chocolate de frutilla." },
 
   { id: "chimi-roll",  cat: "salados",    name: "Chimi Roll",  price: 5000, img: chimi,
     desc: "Relleno de jamón y queso." },

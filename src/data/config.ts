@@ -6,7 +6,7 @@ export const STORE = {
 
   // WhatsApp de quien vende: código de país + número, sin "+", espacios ni guiones.
   // Ej. Argentina: +54 9 11 1234-5678  →  "5491112345678"
-  whatsapp: "5491100000000",
+  whatsapp: "5493874814509", // +54 9 387 481-4509
 
   locale: "es-AR",
   currency: "ARS",
